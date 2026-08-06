@@ -1,18 +1,58 @@
 aid: wonolo
 name: Wonolo
-description: 'Wonolo is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Wonolo is an on-demand staffing marketplace, founded in 2013 and headquartered
+  in San Francisco, that connects businesses needing flexible frontline labor with a
+  pool of vetted independent workers ("Wonoloers") for warehousing, manufacturing, food
+  production, retail, hospitality and general labor jobs. Businesses post job requests
+  and are matched to available workers in real time without resumes or interviews, for
+  one-off, ongoing and temp-to-hire needs. Wonolo operates a REST integration API (V2)
+  on api.wonolo.com that lets customers create and manage job requests, jobs, workers
+  and users programmatically and receive webhook callbacks, so scheduling, timekeeping,
+  HR and CRM systems can be wired directly into the staffing platform.'
 url: https://raw.githubusercontent.com/api-evangelist/wonolo/refs/heads/main/apis.yml
+image: https://framerusercontent.com/assets/PBgIa3TL1hQKy1ZdIQ2vbm12CE.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-05'
 modified: '2026-08-05'
 tags:
 - Company
-apis: []
+- Staffing
+- Workforce
+- Human Resources
+- Marketplace
+- Gig Economy
+- Recruiting
+- Labor
+- On-Demand
+apis:
+- aid: wonolo:wonolo-api-v2
+  name: Wonolo API V2
+  description: 'The Wonolo API V2 is a RESTful, JSON-only integration API for the Wonolo
+    on-demand staffing platform. It performs CRUD operations against platform resources
+    — Users (both Workers/Wonoloers and Employers/Requesters), Job Requests (a unit of
+    work to be staffed) and Jobs (an individual worker''s assignment against a request)
+    — and supports webhook callbacks so a customer system can track resource state
+    changes. Callers authenticate by exchanging an issued api_key and secret_key for a
+    token at /api_v2/authenticate and pass that token on subsequent calls. API keys are
+    issued at one of two access levels: Public Pool (read-oriented access to Wonolo''s
+    public worker pool) and Private Pool (for companies managing their own worker pool),
+    with write operations restricted at the Public Pool level.'
+  humanURL: https://www.wonolo.com/businesses
+  baseURL: https://api.wonolo.com/api_v2/
+  tags:
+  - Staffing
+  - Workforce
+  - Jobs
+  - Webhooks
+  properties:
+  - type: Authentication
+    url: authentication/wonolo-authentication.yml
+  - type: Lifecycle
+    url: lifecycle/wonolo-lifecycle.yml
+  - type: Conformance
+    url: conformance/wonolo-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +60,48 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/wonolo_stock/
+  url: https://www.wonolo.com/
+- type: Blog
+  url: https://www.wonolo.com/blog
+- type: GitHubOrganization
+  url: https://github.com/Wonolo
+- type: Support
+  url: https://support-business.wonolo.com/
+- type: HelpCenter
+  url: https://support-worker.wonolo.com/
+- type: TermsOfService
+  url: https://info.wonolo.com/terms/
+- type: PrivacyPolicy
+  url: https://info.wonolo.com/privacy/
+- type: Login
+  url: https://api.wonolo.com/users/sign_in
+- type: WellKnown
+  url: well-known/wonolo-well-known.yml
+- type: DomainSecurity
+  url: security/wonolo-domain-security.yml
+- type: LLMsTxt
+  url: llms/wonolo-llms.txt
+x-enrichment:
+  date: '2026-08-05'
+  status: minimal
+  artifacts_added: 8
+  pass: local-v1
+x-coverage:
+  state: gated
+  reason: customer-only-docs
+  detail: >-
+    Wonolo's API is live — https://api.wonolo.com/api_v2/info answers 200 anonymously — but its
+    public reference at wonolo.readme.io now returns a hard 404 and the Developer Center at
+    developer.wonolo.com is a dangling Netlify custom domain (cert covers only *.netlify.app,
+    origin 404s), so the api_v2 contract is reachable today only by customers Wonolo has issued
+    an api_key/secret_key to.
+  evidence:
+  - url: https://api.wonolo.com/api_v2/info
+    status: 200
+  - url: https://wonolo.readme.io/docs/getting-started
+    status: 404
+  - url: https://wonolo-developer-center.netlify.app/
+    status: 404
+  - url: https://api.wonolo.com/openapi.json
+    status: 404
+  checked: '2026-08-05'

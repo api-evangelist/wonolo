@@ -1,0 +1,76 @@
+generated: '2026-08-05'
+method: probed
+source: live GET of /.well-known/* on every Wonolo host in apis.yml
+notes: >-
+  api.wonolo.com is fronted by Pomerium, an identity-aware proxy, which publishes RFC 8414
+  authorization-server metadata and RFC 9728 protected-resource metadata at the API host
+  root. Both were fetched anonymously and saved verbatim. A control probe of a random
+  /.well-known/<random> path on the same host returned 404, so these are genuine documents
+  and not a catch-all 200. The advertised endpoints sit under Pomerium's /.pomerium/mcp/*
+  namespace, which indicates MCP-capable proxy support is enabled, but no MCP route
+  answered tools/list on any probed path (see mcp probe below), so no MCPServer is claimed.
+hosts:
+- host: https://api.wonolo.com
+  documents:
+  - path: /.well-known/oauth-authorization-server   # RFC 8414
+    status: 200
+    content_type: application/json
+    file: wonolo-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource     # RFC 9728
+    status: 200
+    content_type: application/json
+    file: wonolo-oauth-protected-resource.json
+  - path: /.well-known/security.txt                 # RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /robots.txt
+    status: 200
+- host: https://www.wonolo.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /robots.txt
+    status: 200
+mcp_probe:
+  method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  result: no MCP endpoint responded
+  paths:
+  - {path: 'https://api.wonolo.com/mcp', status: 404, body: 'pomerium route_not_found'}
+  - {path: 'https://api.wonolo.com/mcp/sse', status: 404, body: 'pomerium route_not_found'}
+  - {path: 'https://api.wonolo.com/api_v2/mcp', status: 404}
+  - {path: 'https://api.wonolo.com/sse', status: 404}
+  - {path: 'https://api.wonolo.com/api/mcp', status: 404}
+  - {path: 'https://api.wonolo.com/.pomerium/mcp', status: 405}
+x-evidence:
+  fetched: '2026-08-05'
+  control_path: https://api.wonolo.com/.well-known/zzz-control-<random>
+  control_status: 404

@@ -1,0 +1,73 @@
+generated: '2026-08-05'
+method: probed
+source: live probes of api.wonolo.com + www.wonolo.com
+notes: >-
+  Wonolo publishes no OpenAPI, AsyncAPI, GraphQL SDL or JSON Schema, so nothing here is derived
+  from a spec. Every `conforms: true` below rests on a document that was fetched anonymously
+  during this pass. Standards we could not test are recorded as unknown rather than false.
+standards:
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: >-
+    https://api.wonolo.com/.well-known/oauth-authorization-server returned 200 application/json
+    with issuer, authorization_endpoint, token_endpoint, registration_endpoint,
+    response_types_supported and code_challenge_methods_supported.
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: >-
+    https://api.wonolo.com/.well-known/oauth-protected-resource returned 200 application/json
+    with resource, authorization_servers and bearer_methods_supported.
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported = [S256] in the authorization-server metadata.
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint published at https://api.wonolo.com/.pomerium/mcp/register.
+- id: oauth2
+  conforms: true
+  evidence: authorization_code + refresh_token grant types advertised in RFC 8414 metadata.
+- id: rfc8615-well-known-uris
+  conforms: true
+  evidence: two /.well-known/ documents served; a control /.well-known/<random> path returned 404.
+- id: rfc6797-hsts
+  conforms: true
+  evidence: 'Strict-Transport-Security present on both hosts (api.wonolo.com max-age=31556952
+    includeSubdomains; www.wonolo.com max-age=31536000). See security/wonolo-domain-security.yml.'
+- id: dmarc
+  conforms: true
+  evidence: wonolo.com publishes DMARC with policy p=reject.
+- id: caa
+  conforms: true
+  evidence: wonolo.com publishes CAA records restricting issuance to six named CAs.
+- id: openid-connect
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on both hosts.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt and /security.txt returned 404 on both hosts.
+- id: dnssec
+  conforms: false
+  evidence: no DNSSEC on wonolo.com (probed).
+- id: rfc9457-problem-details
+  conforms: unknown
+  evidence: >-
+    No OpenAPI and no readable error reference. The one anonymous JSON endpoint reachable
+    (/api_v2/info) returns a plain JSON object, and 404s from the Rails app return
+    {"status":404,"error":"Not Found"} — not application/problem+json — but that is the
+    framework default, not an observed API error contract.
+- id: openapi
+  conforms: false
+  evidence: >-
+    No spec at any probed path on api.wonolo.com (/openapi.json, /openapi.yaml, /swagger.json,
+    /api_v2/openapi.json, /api-docs, /docs — all 404) and none on the docs host.
+- id: asyncapi
+  conforms: unknown
+  evidence: Webhooks are documented by Wonolo, but no AsyncAPI document was found.
+x-evidence:
+- {url: 'https://api.wonolo.com/.well-known/oauth-authorization-server', status: 200}
+- {url: 'https://api.wonolo.com/.well-known/oauth-protected-resource', status: 200}
+- {url: 'https://api.wonolo.com/.well-known/openid-configuration', status: 404}
+- {url: 'https://api.wonolo.com/.well-known/security.txt', status: 404}
+- {url: 'https://api.wonolo.com/openapi.json', status: 404}
+- {url: 'https://api.wonolo.com/swagger.json', status: 404}
+- {url: 'https://api.wonolo.com/api-docs', status: 404}

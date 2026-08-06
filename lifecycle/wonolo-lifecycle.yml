@@ -1,0 +1,47 @@
+generated: '2026-08-05'
+method: probed
+source: https://api.wonolo.com/api_v2/info
+versioning:
+  scheme: uri-path
+  current: v2
+  path_prefix: /api_v2/
+  evidence: >-
+    GET https://api.wonolo.com/api_v2/info returned 200 application/json with
+    {"utc_time_now":"...","environment":"production","rails_environment":"production",
+    "rack_environment":"production","release_version":null,"deploy":null}. The API advertises
+    no release_version or deploy identifier, so there is no build/version stamp to track.
+  predecessor: >-
+    A V1 existed (the current documentation set is labelled V2.0), but no V1 base path,
+    sunset date, or migration guide is publicly reachable.
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+  found: false
+  note: No deprecation or sunset policy was found on any reachable Wonolo host.
+sla:
+  url: null
+  uptime_target: null
+  found: false
+status_page:
+  url: null
+  found: false
+  evidence: 'status.wonolo.com does not resolve (NXDOMAIN); no status link on www.wonolo.com.'
+changelog:
+  url: null
+  found: false
+documentation_lifecycle:
+  state: retired
+  detail: >-
+    Wonolo's public API documentation was published at https://wonolo.readme.io/ and its
+    Developer Center at https://developer.wonolo.com/. Both are now unreachable: the ReadMe
+    project returns HTTP 404 (steady state, with rate-limit budget remaining), and
+    developer.wonolo.com is a dangling Netlify custom domain — DNS still points at
+    wonolo-developer-center.netlify.app, but the TLS certificate only covers *.netlify.app and
+    the origin returns 404. The API itself remains live.
+deprecated_operations: []
+x-evidence:
+- {url: 'https://api.wonolo.com/api_v2/info', status: 200}
+- {url: 'https://wonolo.readme.io/docs/getting-started', status: 404}
+- {url: 'https://developer.wonolo.com/', status: 0, note: 'TLS SAN mismatch (*.netlify.app)'}
+- {url: 'https://wonolo-developer-center.netlify.app/', status: 404}
+- {url: 'https://status.wonolo.com/', status: 0, note: NXDOMAIN}

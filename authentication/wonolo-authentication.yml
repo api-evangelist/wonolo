@@ -1,0 +1,74 @@
+generated: '2026-08-05'
+method: searched
+source: https://api.wonolo.com/.well-known/oauth-authorization-server
+docs: https://wonolo.readme.io/docs/getting-started
+docs_status: 404
+notes: >-
+  Wonolo publishes no OpenAPI, so this profile is not derived from securitySchemes. It is
+  assembled from two sources of different strength, kept separate on purpose: (1) the RFC 8414
+  / RFC 9728 metadata documents that api.wonolo.com actually serves anonymously today, fetched
+  verbatim into well-known/; and (2) the API V2 token-exchange model as published on Wonolo's
+  ReadMe developer documentation, which now returns HTTP 404 and could not be re-fetched during
+  this pass. Anything from source (2) is flagged verified: false — do not treat it as confirmed.
+summary:
+  types: [apiKey, http]
+  api_key_in: [body]
+  oauth2_flows: [authorizationCode]
+  oauth2_scope_count: 0
+schemes:
+- name: wonolo-api-v2-token
+  type: http
+  scheme: bearer
+  verified: false
+  description: >-
+    API V2 callers POST an issued api_key and secret_key to /api_v2/authenticate and receive a
+    token that is presented on subsequent calls. Credentials are issued by Wonolo to customers;
+    there is no public self-service key issuance.
+  token_endpoint: https://api.wonolo.com/api_v2/authenticate
+  source: https://wonolo.readme.io/docs/getting-started
+- name: wonolo-webhook-signature
+  type: apiKey
+  in: header
+  parameter_name: X-Wonolo-Webhook-Token
+  verified: false
+  description: >-
+    Outbound webhook callbacks are authenticated to the receiver with an X-Wonolo-Webhook-Token
+    header carrying a SHA-256 digest of the webhook JSON body concatenated with the customer's
+    secret API key. The receiving URI must accept HTTPS.
+  source: https://wonolo.readme.io/docs/webhooks
+- name: pomerium-oauth2
+  type: oauth2
+  verified: true
+  description: >-
+    api.wonolo.com is fronted by Pomerium, which publishes OAuth 2.0 authorization-server
+    metadata (RFC 8414) and protected-resource metadata (RFC 9728) at the host root. This is
+    the identity-aware proxy's own OAuth surface — it is not documented by Wonolo as the API V2
+    application auth model — but it is live, anonymous and machine readable.
+  issuer: https://api.wonolo.com
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.wonolo.com/.pomerium/mcp/authorize
+    tokenUrl: https://api.wonolo.com/.pomerium/mcp/token
+    scopes: {}
+  registration_endpoint: https://api.wonolo.com/.pomerium/mcp/register
+  revocation_endpoint: https://api.wonolo.com/.pomerium/mcp/revoke
+  pkce: [S256]
+  token_endpoint_auth_methods: [client_secret_basic, none]
+  bearer_methods_supported: [header]
+  source: well-known/wonolo-oauth-authorization-server.json
+access_levels:
+- name: Public Pool
+  verified: false
+  description: >-
+    Access to Wonolo's public pool of workers. Write operations are forbidden in many cases at
+    this level.
+  source: https://wonolo.readme.io/docs/getting-started
+- name: Private Pool
+  verified: false
+  description: For companies managing their own private pool of workers.
+  source: https://wonolo.readme.io/docs/getting-started
+x-evidence:
+- {url: 'https://api.wonolo.com/.well-known/oauth-authorization-server', status: 200, fetched: '2026-08-05'}
+- {url: 'https://api.wonolo.com/.well-known/oauth-protected-resource', status: 200, fetched: '2026-08-05'}
+- {url: 'https://api.wonolo.com/api_v2/info', status: 200, fetched: '2026-08-05'}
+- {url: 'https://wonolo.readme.io/docs/getting-started', status: 404, fetched: '2026-08-05'}
