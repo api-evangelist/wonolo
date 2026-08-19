@@ -13,7 +13,7 @@ url: https://raw.githubusercontent.com/api-evangelist/wonolo/refs/heads/main/api
 image: https://framerusercontent.com/assets/PBgIa3TL1hQKy1ZdIQ2vbm12CE.png
 x-type: company
 x-source: harvest:secondary-market
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-08-05'
 modified: '2026-08-05'
 tags:
