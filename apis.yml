@@ -44,6 +44,11 @@ apis:
   tags:
   - Staffing
   - Workforce
+  - Job
+  - Webhook
+  tags_raw:
+  - Staffing
+  - Workforce
   - Jobs
   - Webhooks
   properties:
