@@ -21,6 +21,19 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: low
+  source:
+  - authentication
+  - security
+  generated: '2026-09-02'
+  method: derived
 image: https://framerusercontent.com/assets/PBgIa3TL1hQKy1ZdIQ2vbm12CE.png
 x-type: company
 x-source: harvest:secondary-market
